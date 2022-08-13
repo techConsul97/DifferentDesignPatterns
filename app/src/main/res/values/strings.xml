@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">DifferentDesignPatterns</string>
+    <string name="MVC_PATTERN">MVC PATTERN</string>
+</resources>
