@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
             binding = ActivityMainBinding.inflate(layoutInflater)
 
-        getUsersData(applicationContext)
+        getUsersData() //FUNCTION THAT FETCHES DATA FROM 'API' and passes it for DISPLAY
 
         setContentView(binding.root)
 
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
 
     // Get data from DataSource(Users Api in our case)
- private fun getUsersData(context: Context){
+ private fun getUsersData(){
      CoroutineScope(Dispatchers.Main).launch {
 
          try {
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                  val users = response.body() ?: {throw Throwable("Body of the Api is null")}
 
                  //NOT NULL -> CALL the displayUserData function
-                 displayUserData(users as Users,context)
+                 displayUserData(users as Users)
 
 
 
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
     //Display Data to the Widgets
 
-    private fun displayUserData(users:Users,context: Context){
+    private fun displayUserData(users:Users){
 
         //get the recyclerView
         binding.rvUsers.apply {
