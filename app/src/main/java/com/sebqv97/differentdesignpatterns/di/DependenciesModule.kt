@@ -39,7 +39,4 @@ object DependenciesModule {
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
-
-
-
 }

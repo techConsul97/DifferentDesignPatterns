@@ -11,6 +11,7 @@ import com.sebqv97.differentdesignpatterns.adapters.UserRvAdapter
 import com.sebqv97.differentdesignpatterns.data.api.UserApiDetails
 import com.sebqv97.differentdesignpatterns.data.models.Users
 import com.sebqv97.differentdesignpatterns.databinding.ActivityMainBinding
+import com.sebqv97.differentdesignpatterns.domain.presenter.IUsersPresenter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,13 +23,13 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
         private lateinit var binding : ActivityMainBinding
 
-        @Inject lateinit var userApi:UserApiDetails
+        @Inject lateinit var iUsersPresenter: IUsersPresenter //FIELD INJECTION
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
             binding = ActivityMainBinding.inflate(layoutInflater)
 
-        getUsersData(applicationContext)
+       displayUserData()          //FUNCTION THAT WILL 'order' DATA
 
         setContentView(binding.root)
 
@@ -37,43 +38,19 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    //Display Data
 
+    private fun displayUserData(){
 
-    // Get data from DataSource(Users Api in our case)
- private fun getUsersData(context: Context){
-     CoroutineScope(Dispatchers.Main).launch {
+        val users  = iUsersPresenter.returnUsersToDisplay() //CALLING THE PRESENTER TO FETCH ME SOME DATA
+        users.let {                            //MAKING SURE THE RETURNED DATA IS NOT NULL
+            binding.rvUsers.apply {            //IF NOT NULL, SET THE DATA TO VIEW(RECYCLER VIEW IN OUR CASE)
 
-         try {
-             val response = userApi.getUsers()
-             Log.d("Response",response.body().toString())
-             if(response.isSuccessful){
-                 val users = response.body() ?: {throw Throwable("Body of the Api is null")}
-
-                 //NOT NULL -> CALL the displayUserData function
-                 displayUserData(users as Users,context)
-
-
-
-             }
-         }catch (e:Exception){
-             Log.d("Response Error", e.message.toString())
-         }
-     }
-}
-
-
-    //Display Data to the Widgets
-
-    private fun displayUserData(users:Users,context: Context){
-
-        //get the recyclerView
-        binding.rvUsers.apply {
-
-            //Set layout manager
-            layoutManager = LinearLayoutManager(context)
-            adapter = UserRvAdapter(users)
+                //Set layout manager
+                layoutManager = LinearLayoutManager(context)
+                adapter = UserRvAdapter(users)
+            }
         }
-
 
     }
 }
