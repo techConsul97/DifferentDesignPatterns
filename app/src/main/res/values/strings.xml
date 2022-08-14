@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">DifferentDesignPatterns</string>
-    <string name="PATTERN_NAME">MVVM PATTERN</string>
+    <string name="PATTERN_NAME">MVVM-R PATTERN</string>
 </resources>
