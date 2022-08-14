@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sebqv97.differentdesignpatterns.R
 import com.sebqv97.differentdesignpatterns.adapters.UserRvAdapter
 import com.sebqv97.differentdesignpatterns.data.api.UserApiDetails
 import com.sebqv97.differentdesignpatterns.data.models.Users
 import com.sebqv97.differentdesignpatterns.databinding.ActivityMainBinding
+import com.sebqv97.differentdesignpatterns.domain.UsersViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,12 +23,15 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
         private lateinit var binding : ActivityMainBinding
-
-        @Inject lateinit var userApi:UserApiDetails
+        private lateinit var usersViewModel: UsersViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        //Instantiating variables
             binding = ActivityMainBinding.inflate(layoutInflater)
+            usersViewModel = ViewModelProvider(this@MainActivity)[UsersViewModel::class.java]
 
         getUsersData() //FUNCTION THAT FETCHES DATA FROM 'API' and passes it for DISPLAY
 
@@ -41,39 +46,23 @@ class MainActivity : AppCompatActivity() {
 
     // Get data from DataSource(Users Api in our case)
  private fun getUsersData(){
-     CoroutineScope(Dispatchers.Main).launch {
 
-         try {
-             val response = userApi.getUsers()
-             Log.d("Response",response.body().toString())
-             if(response.isSuccessful){
-                 val users = response.body() ?: {throw Throwable("Body of the Api is null")}
-
-                 //NOT NULL -> CALL the displayUserData function
-                 displayUserData(users as Users)
+      usersViewModel.getUsersFromApi()
+     usersViewModel._usersLiveData.observe(this@MainActivity){users->
+         displayUsersToRv(users)
 
 
-
-             }
-         }catch (e:Exception){
-             Log.d("Response Error", e.message.toString())
-         }
      }
-}
+    }
 
+    private fun displayUsersToRv(users: Users){
 
-    //Display Data to the Widgets
-
-    private fun displayUserData(users:Users){
-
-        //get the recyclerView
+        //Configure the Recycler View(Adapter and LayoutManager)
         binding.rvUsers.apply {
-
-            //Set layout manager
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(applicationContext)
             adapter = UserRvAdapter(users)
         }
 
-
     }
+
 }
