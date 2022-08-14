@@ -1,39 +1,29 @@
 package com.sebqv97.differentdesignpatterns.ui
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sebqv97.differentdesignpatterns.R
 import com.sebqv97.differentdesignpatterns.adapters.UserRvAdapter
-import com.sebqv97.differentdesignpatterns.data.api.UserApiDetails
 import com.sebqv97.differentdesignpatterns.data.models.Users
 import com.sebqv97.differentdesignpatterns.databinding.ActivityMainBinding
 import com.sebqv97.differentdesignpatterns.domain.UsersViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.lang.Exception
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-        private lateinit var binding : ActivityMainBinding
-        private lateinit var usersViewModel: UsersViewModel
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var usersViewModel: UsersViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
         //Instantiating variables
-            binding = ActivityMainBinding.inflate(layoutInflater)
-            usersViewModel = ViewModelProvider(this@MainActivity)[UsersViewModel::class.java]
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        usersViewModel = ViewModelProvider(this@MainActivity)[UsersViewModel::class.java]
 
-        getUsersData() //FUNCTION THAT FETCHES DATA FROM 'API' and passes it for DISPLAY
+        getUsers() //FUNCTION THAT FETCHES DATA FROM 'API' and passes it for DISPLAY
 
         setContentView(binding.root)
 
@@ -41,21 +31,20 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-
-
     // Get data from DataSource(Users Api in our case)
- private fun getUsersData(){
+    private fun getUsers() {
 
-      usersViewModel.getUsersFromApi()
-     usersViewModel._usersLiveData.observe(this@MainActivity){users->
-         displayUsersToRv(users)
+        //ASK the ViewModel to procure our data from data Layer
+        usersViewModel.getUsersFromApi()
 
+        /*By DEFAULT the data stored in LiveData variable is dummy.
+            As SOON as data gets procured, the observe function will get triggered */
+        usersViewModel._usersLiveData.observe(this@MainActivity)
+        { users -> displayUsersToRv(users) } //Call another function to display data (SRP)
 
-     }
     }
 
-    private fun displayUsersToRv(users: Users){
+    private fun displayUsersToRv(users: Users) {
 
         //Configure the Recycler View(Adapter and LayoutManager)
         binding.rvUsers.apply {

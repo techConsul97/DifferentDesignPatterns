@@ -19,6 +19,8 @@ class UsersViewModel @Inject constructor(
 
      var _usersLiveData : MutableLiveData<Users> = MutableLiveData(Users())
 
+
+    //Function that will call the Repository layer in order to retrieve the data the USER requests
     fun getUsersFromApi(){
 
         CoroutineScope(Dispatchers.IO).launch {
