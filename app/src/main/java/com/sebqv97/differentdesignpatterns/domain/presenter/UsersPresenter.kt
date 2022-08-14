@@ -42,6 +42,14 @@ class UsersPresenter @Inject constructor(
         return  users!!
 
     }
+
+    override suspend fun editUserFromApi() {}
+
+    override fun returnConfirmationOfEditingAnUser() {}
+
+    override suspend fun getUsersFromDb() {}
+
+    override fun returnUsersFromDb() {}
 }
 
 

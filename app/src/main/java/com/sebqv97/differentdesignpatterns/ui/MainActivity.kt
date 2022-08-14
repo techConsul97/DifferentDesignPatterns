@@ -1,22 +1,12 @@
 package com.sebqv97.differentdesignpatterns.ui
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sebqv97.differentdesignpatterns.R
 import com.sebqv97.differentdesignpatterns.adapters.UserRvAdapter
-import com.sebqv97.differentdesignpatterns.data.api.UserApiDetails
-import com.sebqv97.differentdesignpatterns.data.models.Users
 import com.sebqv97.differentdesignpatterns.databinding.ActivityMainBinding
 import com.sebqv97.differentdesignpatterns.domain.presenter.IUsersPresenter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 @AndroidEntryPoint
